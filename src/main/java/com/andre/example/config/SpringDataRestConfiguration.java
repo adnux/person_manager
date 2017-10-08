@@ -1,9 +1,11 @@
-package com.andre.example;
+package com.andre.example.config;
 
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
@@ -13,9 +15,12 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.core.event.ValidatingRepositoryEventListener;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter;
-import org.springframework.util.ClassUtils;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.andre.example.Application;
 
 @Configuration
 public class SpringDataRestConfiguration extends RepositoryRestConfigurerAdapter {
@@ -31,7 +36,12 @@ public class SpringDataRestConfiguration extends RepositoryRestConfigurerAdapter
 	}
 
 	private Class<?> getClass(String className) {
-		return ClassUtils.getUserClass(className);
+		try {
+			return ClassUtils.getClass(className);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
@@ -45,5 +55,26 @@ public class SpringDataRestConfiguration extends RepositoryRestConfigurerAdapter
 	@Primary
 	Validator validator() {
 		return new LocalValidatorFactoryBean();
+	}
+
+	// @Bean
+	// public FilterRegistrationBean corsFilter() {
+	// UrlBasedCorsConfigurationSource source = new
+	// UrlBasedCorsConfigurationSource();
+	// CorsConfiguration config = new
+	// CorsConfiguration().applyPermitDefaultValues();
+	// source.registerCorsConfiguration("/**", config);
+	// FilterRegistrationBean bean = new FilterRegistrationBean(new
+	// CorsFilter(source));
+	// bean.setOrder(0);
+	// return bean;
+	// }
+
+	@RequestMapping(value = "/api/**", method = RequestMethod.OPTIONS)
+	public void corsHeaders(HttpServletResponse response) {
+		response.addHeader("Access-Control-Allow-Origin", "*");
+		response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+		response.addHeader("Access-Control-Allow-Headers", "origin, content-type, accept, x-requested-with");
+		response.addHeader("Access-Control-Max-Age", "3600");
 	}
 }

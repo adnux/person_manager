@@ -6,6 +6,10 @@ spring.jmx:
    enabled: false
 
 spring:
+  hateoas:
+    use-hal-as-default-json-media-type: false
+  jpa:
+    show-sql: true
   data:
     rest:
       base-path: /api
@@ -32,7 +36,7 @@ management:
 
 #default project info followed by actual injected pom-specified values.
 project:
-  name: spring-boot-rest-example
+  name: person-manager-api
   version: 0.1
   description: boot-example default description
 info:

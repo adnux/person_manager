@@ -11,30 +11,29 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
 /*
  * This is the main Spring Boot application class. It configures Spring Boot, JPA, Swagger
  */
 
 @SpringBootApplication
 @Configuration
-@EnableAutoConfiguration  // Sprint Boot Auto Configuration
+@EnableAutoConfiguration // Sprint Boot Auto Configuration
+// @EnableAutoConfiguration(exclude = HypermediaAutoConfiguration.class)
 @ComponentScan(basePackages = "com.andre.example")
 @EnableJpaRepositories("com.andre.example.dao.jpa") // To segregate MongoDB and JPA repositories. Otherwise not needed.
+
 public class Application extends SpringBootServletInitializer {
 
-    private static final Class<Application> applicationClass = Application.class;
-    private static final Logger log = LoggerFactory.getLogger(applicationClass);
+	private static final Class<Application> applicationClass = Application.class;
+	private static final Logger log = LoggerFactory.getLogger(applicationClass);
 
 	public static void main(String[] args) {
 		SpringApplication.run(applicationClass, args);
 	}
 
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(applicationClass);
-    }
-    
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		return application.sources(applicationClass);
+	}
 
 }

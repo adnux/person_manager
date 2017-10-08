@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.andre</groupId>
-	<artifactId>spring-boot-rest-example</artifactId>
+	<artifactId>person-manager-api</artifactId>
 	<version>0.4.0</version>
 	<packaging>war</packaging>
 	<description>Example project demonstrating REST APIs implemented using Spring Boot, in-memory database, embedded Tomcat, Swagger, JsonPath, Hamcrest and MockMVC</description>
@@ -20,7 +20,7 @@
 	</properties>
 
 	<dependencies>
-	
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
@@ -37,6 +37,32 @@
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-jsr310</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.bedatadriven</groupId>
+			<artifactId>jackson-datatype-jts</artifactId>
+			<version>2.4</version>
+		</dependency>
+		<!-- RSQL -->
+		<dependency>
+		    <groupId>cz.jirutka.rsql</groupId>
+		    <artifactId>rsql-parser</artifactId>
+		    <version>2.0.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.github.tennaito</groupId>
+		    <artifactId>rsql-jpa</artifactId>
+		    <version>2.0.3-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>3.6</version>
+		</dependency>
+	    <dependency>
+	        <groupId>com.github.rutledgepaulv</groupId>
+	        <artifactId>rest-query-engine</artifactId>
+	        <version>0.7.1</version>
+	    </dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -87,10 +113,6 @@
 			<artifactId>jackson-core-asl</artifactId>
 			<version>1.9.13</version>
 		</dependency>
-		<!-- <dependency> <groupId>com.fasterxml.jackson.datatype</groupId> <artifactId>jackson-datatype-jdk8</artifactId> 
-			<version>2.8.7</version> </dependency> <dependency> <groupId>com.fasterxml.jackson.datatype</groupId> 
-			<artifactId>jackson-datatype-jsr310</artifactId> <version>2.8.7</version> 
-			</dependency> -->
 
 		<!-- attribute level json comparisons -->
 		<dependency>

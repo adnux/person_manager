@@ -22,9 +22,9 @@ public class CPFValidatorImpl implements ConstraintValidator<ExtendedCpfValidato
 	}
 
 	@Override
-	public boolean isValid(String documento, ConstraintValidatorContext context) {
-		Person person = repository.findByDocument(documento);
-		if (nonNull(person)) {
+	public boolean isValid(String document, ConstraintValidatorContext context) {
+		Person exsiting = repository.findByDocument(document);
+		if (nonNull(exsiting)) {
 			return false;
 		} else {
 			return true;
