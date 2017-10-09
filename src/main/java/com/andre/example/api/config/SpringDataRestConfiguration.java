@@ -1,4 +1,4 @@
-package com.andre.example.config;
+package com.andre.example.api.config;
 
 import java.util.Set;
 

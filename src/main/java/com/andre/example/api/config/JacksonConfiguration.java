@@ -1,4 +1,4 @@
-package com.andre.example.config;
+package com.andre.example.api.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

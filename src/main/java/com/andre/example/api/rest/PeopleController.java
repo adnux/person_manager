@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -32,6 +33,7 @@ import io.swagger.annotations.ApiParam;
 @RestController
 @RequestMapping(value = "/api/people")
 @Api(tags = { "people" })
+@CrossOrigin
 public class PeopleController extends AbstractRestHandler {
 
 	private final PersonRepository personRepository;
