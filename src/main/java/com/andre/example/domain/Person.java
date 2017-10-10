@@ -33,6 +33,8 @@ public class Person {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate birth;
 
+	private boolean deleted;
+
 	public Person() {
 	}
 
@@ -83,6 +85,14 @@ public class Person {
 
 	public void setBirth(LocalDate birth) {
 		this.birth = birth;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	@Override

@@ -7,12 +7,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.repository.support.PageableExecutionUtils;
 
+import com.andre.example.dao.jpa.PersonRepository;
 import com.andre.example.dao.jpa.PersonRepositoryCustom;
 import com.andre.example.domain.Person;
 
@@ -20,6 +21,9 @@ public class PersonRepositoryImpl implements PersonRepositoryCustom {
 
 	@Autowired
 	private MongoOperations mongoOps;
+
+	@Autowired
+	private PersonRepository repository;
 
 	@Override
 	public Page<Person> findByNameOrDocumentOrEmailOrBirth(Person filter, Pageable pageable) {
@@ -37,10 +41,10 @@ public class PersonRepositoryImpl implements PersonRepositoryCustom {
 		if (nonNull(filter.getBirth())) {
 			query.addCriteria(Criteria.where("birth").is(filter.getBirth()));
 		}
+		query.addCriteria(Criteria.where("deleted").ne(true));
 
 		List<Person> list = mongoOps.find(query.with(pageable), Person.class);
-
-		return new PageImpl<>(list, pageable, list.size());
+		return PageableExecutionUtils.getPage(list, pageable, () -> mongoOps.count(query, Person.class));
 	}
 
 }

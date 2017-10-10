@@ -86,7 +86,9 @@ public class PeopleController extends AbstractRestHandler {
 	@ApiOperation(value = "Delete the person.")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable("id") String id) {
+		Person person = this.personRepository.findOne(id);
 		checkResourceFound(this.personRepository.findOne(id));
-		this.personRepository.delete(id);
+		person.setDeleted(true);
+		this.personRepository.save(person);
 	}
 }
