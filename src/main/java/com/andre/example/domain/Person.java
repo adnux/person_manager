@@ -17,111 +17,111 @@ import com.andre.example.validator.ExtendedEmailValidator;
 @Table(name = "person")
 public class Person {
 
-	@Id
-	private String id;
+    @Id
+    private String id;
 
-	@NotBlank
-	@Size(max = 150)
-	private String name;
+    @NotBlank
+    @Size(max = 150)
+    private String name;
 
-	@CPF
-	private String document;
+    @CPF
+    private String document;
 
-	@ExtendedEmailValidator
-	private String email;
+    @ExtendedEmailValidator
+    private String email;
 
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate birth;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birth;
 
-	private boolean deleted;
+    private boolean deleted;
 
-	public Person() {
-	}
+    public Person() {
+    }
 
-	public Person(String id, String name, String document, String email, LocalDate birth) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.document = document;
-		this.email = email;
-		this.birth = birth;
-	}
+    public Person(String id, String name, String document, String email, LocalDate birth) {
+        super();
+        this.id = id;
+        this.name = name;
+        this.document = document;
+        this.email = email;
+        this.birth = birth;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public void defineObjectId(String id) {
-		this.id = id;
-	}
+    public void defineObjectId(String id) {
+        this.id = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getDocument() {
-		return document;
-	}
+    public String getDocument() {
+        return document;
+    }
 
-	public void setDocument(String document) {
-		this.document = document;
-	}
+    public void setDocument(String document) {
+        this.document = document;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public LocalDate getBirth() {
-		return birth;
-	}
+    public LocalDate getBirth() {
+        return birth;
+    }
 
-	public void setBirth(LocalDate birth) {
-		this.birth = birth;
-	}
+    public void setBirth(LocalDate birth) {
+        this.birth = birth;
+    }
 
-	public boolean isDeleted() {
-		return deleted;
-	}
+    public boolean isDeleted() {
+        return deleted;
+    }
 
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Person [id=");
-		builder.append(id);
-		if (name != null) {
-			builder.append(", ");
-			builder.append("name=");
-			builder.append(name);
-		}
-		if (document != null) {
-			builder.append(", ");
-			builder.append("document=");
-			builder.append(document);
-		}
-		if (email != null) {
-			builder.append(", ");
-			builder.append("email=");
-			builder.append(email);
-		}
-		if (birth != null) {
-			builder.append(", ");
-			builder.append("birth=");
-			builder.append(birth);
-		}
-		builder.append("]");
-		return builder.toString();
-	}
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Person [id=");
+        builder.append(id);
+        if (name != null) {
+            builder.append(", ");
+            builder.append("name=");
+            builder.append(name);
+        }
+        if (document != null) {
+            builder.append(", ");
+            builder.append("document=");
+            builder.append(document);
+        }
+        if (email != null) {
+            builder.append(", ");
+            builder.append("email=");
+            builder.append(email);
+        }
+        if (birth != null) {
+            builder.append(", ");
+            builder.append("birth=");
+            builder.append(birth);
+        }
+        builder.append("]");
+        return builder.toString();
+    }
 
 }

@@ -25,56 +25,43 @@ import com.andre.example.Application;
 @Configuration
 public class SpringDataRestConfiguration extends RepositoryRestConfigurerAdapter {
 
-	@Override
-	public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
-		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
-		scanner.addIncludeFilter(new AnnotationTypeFilter(Entity.class));
-		String packageName = Application.class.getPackage().getName();
-		Set<BeanDefinition> converters = scanner.findCandidateComponents(packageName);
+    @Override
+    public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
+        ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
+        scanner.addIncludeFilter(new AnnotationTypeFilter(Entity.class));
+        String packageName = Application.class.getPackage().getName();
+        Set<BeanDefinition> converters = scanner.findCandidateComponents(packageName);
 
-		converters.stream().map(BeanDefinition::getBeanClassName).map(this::getClass).forEach(config::exposeIdsFor);
-	}
+        converters.stream().map(BeanDefinition::getBeanClassName).map(this::getClass).forEach(config::exposeIdsFor);
+    }
 
-	private Class<?> getClass(String className) {
-		try {
-			return ClassUtils.getClass(className);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+    private Class<?> getClass(String className) {
+        try {
+            return ClassUtils.getClass(className);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-	@Override
-	public void configureValidatingRepositoryEventListener(ValidatingRepositoryEventListener validatingListener) {
-		Validator validator = validator();
-		validatingListener.addValidator("beforeCreate", validator);
-		validatingListener.addValidator("beforeSave", validator);
-	}
+    @Override
+    public void configureValidatingRepositoryEventListener(ValidatingRepositoryEventListener validatingListener) {
+        Validator validator = validator();
+        validatingListener.addValidator("beforeCreate", validator);
+        validatingListener.addValidator("beforeSave", validator);
+    }
 
-	@Bean
-	@Primary
-	Validator validator() {
-		return new LocalValidatorFactoryBean();
-	}
+    @Bean
+    @Primary
+    Validator validator() {
+        return new LocalValidatorFactoryBean();
+    }
 
-	// @Bean
-	// public FilterRegistrationBean corsFilter() {
-	// UrlBasedCorsConfigurationSource source = new
-	// UrlBasedCorsConfigurationSource();
-	// CorsConfiguration config = new
-	// CorsConfiguration().applyPermitDefaultValues();
-	// source.registerCorsConfiguration("/**", config);
-	// FilterRegistrationBean bean = new FilterRegistrationBean(new
-	// CorsFilter(source));
-	// bean.setOrder(0);
-	// return bean;
-	// }
-
-	@RequestMapping(value = "/api/**", method = RequestMethod.OPTIONS)
-	public void corsHeaders(HttpServletResponse response) {
-		response.addHeader("Access-Control-Allow-Origin", "*");
-		response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-		response.addHeader("Access-Control-Allow-Headers", "origin, content-type, accept, x-requested-with");
-		response.addHeader("Access-Control-Max-Age", "3600");
-	}
+    @RequestMapping(value = "/api/**", method = RequestMethod.OPTIONS)
+    public void corsHeaders(HttpServletResponse response) {
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        response.addHeader("Access-Control-Allow-Headers", "origin, content-type, accept, x-requested-with");
+        response.addHeader("Access-Control-Max-Age", "3600");
+    }
 }

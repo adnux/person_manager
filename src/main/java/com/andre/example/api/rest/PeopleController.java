@@ -1,5 +1,6 @@
 package com.andre.example.api.rest;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -32,63 +33,67 @@ import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping(value = "/api/people")
-@Api(tags = { "people" })
+@Api(tags = {"people"})
 @CrossOrigin
 public class PeopleController extends AbstractRestHandler {
 
-	private final PersonRepository personRepository;
+    private final PersonRepository personRepository;
 
-	public PeopleController(PersonRepository personRepository) {
-		super();
-		this.personRepository = personRepository;
-	}
+    public PeopleController(PersonRepository personRepository) {
+        super();
+        this.personRepository = personRepository;
+    }
 
-	@InitBinder("person")
-	protected void initBinder(WebDataBinder binder) {
-		binder.addValidators(new PersonValidator(personRepository));
-	}
+    @InitBinder("person")
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(new PersonValidator(personRepository));
+    }
 
-	@GetMapping
-	@ResponseStatus(HttpStatus.OK)
-	@ApiOperation(value = "Get a paginated list of all people.", notes = "The list is paginated. You can provide a page number and a page size")
-	@ResponseBody
-	public Page<Person> getAllPeople(@ApiParam(value = "Parameters to filter") Person filter,
-			@ApiParam(value = "Pagination information") Pageable pageable) {
-		return this.personRepository.findByNameOrDocumentOrEmailOrBirth(filter, pageable);
-	}
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Get a paginated list of all people.", notes = "The list is paginated. You can provide a page number and a page size")
+    @ResponseBody
+    public Page<Person> getAllPeople(@ApiParam(value = "Parameters to filter") Person filter,
+            @ApiParam(value = "Pagination information") Pageable pageable) {
+        return this.personRepository.findByNameOrDocumentOrEmailOrBirth(filter, pageable);
+    }
 
-	@GetMapping(value = "/{id}")
-	@ResponseStatus(HttpStatus.OK)
-	@ApiOperation(value = "Get a person.")
-	@ResponseBody
-	public Person getPerson(@PathVariable("id") String id) {
-		return this.personRepository.findOne(id);
-	}
+    @GetMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Get a person.")
+    @ResponseBody
+    public Person getPerson(@PathVariable("id") String id) {
+        return this.personRepository.findOne(id);
+    }
 
-	@PostMapping
-	@ApiOperation(value = "Create a new person.")
-	public Person create(@Valid @RequestBody Person person) {
-		ValidatorFactory vf = Validation.buildDefaultValidatorFactory();
-		Validator validator = vf.getValidator();
-		validator.validate(person);
-		return this.personRepository.save(person);
-	}
+    @PostMapping
+    @ApiOperation(value = "Create a new person.")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Person create(@Valid @RequestBody Person person, HttpServletResponse response) {
+        ValidatorFactory vf = Validation.buildDefaultValidatorFactory();
+        Validator validator = vf.getValidator();
+        validator.validate(person);
+        Person saved = this.personRepository.save(person);
+        response.setHeader("id", saved.getId());
+        return saved;
+    }
 
-	@PutMapping(value = "/{id}")
-	@ApiOperation(value = "Update person information.")
-	public Person update(@PathVariable("id") String id, @RequestBody Person person) {
-		checkResourceFound(this.personRepository.findOne(id));
-		person.defineObjectId(id);
-		return this.personRepository.save(person);
-	}
+    @PutMapping(value = "/{id}")
+    @ApiOperation(value = "Update person information.")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Person update(@PathVariable("id") String id, @RequestBody Person person) {
+        checkResourceFound(this.personRepository.findOne(id));
+        person.defineObjectId(id);
+        return this.personRepository.save(person);
+    }
 
-	@DeleteMapping(value = "/{id}")
-	@ApiOperation(value = "Delete the person.")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void delete(@PathVariable("id") String id) {
-		Person person = this.personRepository.findOne(id);
-		checkResourceFound(this.personRepository.findOne(id));
-		person.setDeleted(true);
-		this.personRepository.save(person);
-	}
+    @DeleteMapping(value = "/{id}")
+    @ApiOperation(value = "Delete the person.")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable("id") String id) {
+        Person person = this.personRepository.findOne(id);
+        checkResourceFound(this.personRepository.findOne(id));
+        person.setDeleted(true);
+        this.personRepository.save(person);
+    }
 }
