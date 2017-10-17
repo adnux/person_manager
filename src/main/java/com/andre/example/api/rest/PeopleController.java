@@ -9,6 +9,7 @@ import javax.validation.ValidatorFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.andre.example.dao.jpa.PersonRepository;
 import com.andre.example.domain.Person;
+import com.andre.example.exception.BadRequestException;
 import com.andre.example.validator.PersonValidator;
 
 import io.swagger.annotations.Api;
@@ -69,7 +71,10 @@ public class PeopleController extends AbstractRestHandler {
     @PostMapping
     @ApiOperation(value = "Create a new person.")
     @ResponseStatus(HttpStatus.CREATED)
-    public Person create(@Valid @RequestBody Person person, HttpServletResponse response) {
+    public Person create(@Valid @RequestBody Person person, BindingResult result, HttpServletResponse response) {
+        if (result.hasErrors()) {
+            throw new BadRequestException("bad request");
+        }
         ValidatorFactory vf = Validation.buildDefaultValidatorFactory();
         Validator validator = vf.getValidator();
         validator.validate(person);

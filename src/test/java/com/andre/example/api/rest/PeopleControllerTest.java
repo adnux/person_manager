@@ -1,4 +1,4 @@
-package com.andre.example.test;
+package com.andre.example.api.rest;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -87,6 +87,7 @@ public class PeopleControllerTest {
     public void shouldCreateAndUpdateAndDelete() throws Exception {
         Person p1 = new Person(null, "Pessoa Teste", "82542284342", "email@email.com", LocalDate.of(2017, 10, 9));
         String p1Json = toJson(p1);
+
         // CREATE
         MvcResult result = mvc.perform(post("/api/people")
                 .accept(MediaType.APPLICATION_JSON)
@@ -123,6 +124,33 @@ public class PeopleControllerTest {
         mvc.perform(get("/api/people/" + id)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+
+        // REAL DELETE
+        repository.delete(id);
+    }
+
+    @Test
+    public void shouldNotDuplicate() throws Exception {
+        Person p1 = new Person(null, "Pessoa Teste", "82542284342", "email@email.com", LocalDate.of(2017, 10, 9));
+        String p1Json = toJson(p1);
+
+        // CREATE
+        MvcResult result = mvc.perform(post("/api/people")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(p1Json))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String id = result.getResponse().getHeader("id");
+
+        // TRY TO DUPLICATE
+        mvc.perform(post("/api/people")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(p1Json))
+                .andExpect(status().isBadRequest())
+                .andReturn();
 
         // REAL DELETE
         repository.delete(id);

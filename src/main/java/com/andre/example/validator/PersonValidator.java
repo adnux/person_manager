@@ -53,7 +53,7 @@ public class PersonValidator implements Validator {
 			Person exsiting = repository.findByDocument(person.getDocument());
 			return isNull(exsiting);
 		} else {
-			Person exsiting = repository.findByIdAndDocumentNot(person.getId(), person.getDocument());
+			Person exsiting = repository.findByIdNotAndDocument(person.getId(), person.getDocument());
 			return isNull(exsiting);
 		}
 	}

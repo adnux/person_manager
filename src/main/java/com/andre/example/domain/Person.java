@@ -100,26 +100,6 @@ public class Person {
         StringBuilder builder = new StringBuilder();
         builder.append("Person [id=");
         builder.append(id);
-        if (name != null) {
-            builder.append(", ");
-            builder.append("name=");
-            builder.append(name);
-        }
-        if (document != null) {
-            builder.append(", ");
-            builder.append("document=");
-            builder.append(document);
-        }
-        if (email != null) {
-            builder.append(", ");
-            builder.append("email=");
-            builder.append(email);
-        }
-        if (birth != null) {
-            builder.append(", ");
-            builder.append("birth=");
-            builder.append(birth);
-        }
         builder.append("]");
         return builder.toString();
     }

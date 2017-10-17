@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 
 import com.andre.example.domain.RestErrorInfo;
+import com.andre.example.exception.BadRequestException;
 import com.andre.example.exception.DataFormatException;
 import com.andre.example.exception.ResourceNotFoundException;
 
@@ -24,42 +25,51 @@ import com.andre.example.exception.ResourceNotFoundException;
 // @ControllerAdvice?
 public abstract class AbstractRestHandler implements ApplicationEventPublisherAware {
 
-	protected final Logger log = LoggerFactory.getLogger(this.getClass());
-	protected ApplicationEventPublisher eventPublisher;
+    protected final Logger log = LoggerFactory.getLogger(this.getClass());
+    protected ApplicationEventPublisher eventPublisher;
 
-	protected static final String DEFAULT_PAGE_SIZE = "100";
-	protected static final String DEFAULT_PAGE_NUM = "0";
-	protected static final PageRequest DEFAULT_PAGE_REQUEST = new PageRequest(0, 10);
+    protected static final String DEFAULT_PAGE_SIZE = "100";
+    protected static final String DEFAULT_PAGE_NUM = "0";
+    protected static final PageRequest DEFAULT_PAGE_REQUEST = new PageRequest(0, 10);
 
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler(DataFormatException.class)
-	public @ResponseBody RestErrorInfo handleDataStoreException(DataFormatException ex, WebRequest request,
-			HttpServletResponse response) {
-		log.info("Converting Data Store exception to RestResponse : " + ex.getMessage());
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DataFormatException.class)
+    public @ResponseBody RestErrorInfo handleDataStoreException(DataFormatException ex, WebRequest request,
+            HttpServletResponse response) {
+        log.info("Converting Data Store exception to RestResponse : " + ex.getMessage());
 
-		return new RestErrorInfo(ex, "You messed up.");
-	}
+        return new RestErrorInfo(ex, "You messed up.");
+    }
 
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	@ExceptionHandler(ResourceNotFoundException.class)
-	public @ResponseBody RestErrorInfo handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest request,
-			HttpServletResponse response) {
-		log.info("ResourceNotFoundException handler:" + ex.getMessage());
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public @ResponseBody RestErrorInfo handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest request,
+            HttpServletResponse response) {
+        log.info("ResourceNotFoundException handler:" + ex.getMessage());
 
-		return new RestErrorInfo(ex, "Sorry I couldn't find it.");
-	}
+        return new RestErrorInfo(ex, "Sorry I couldn't find it.");
+    }
 
-	@Override
-	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
-		this.eventPublisher = applicationEventPublisher;
-	}
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BadRequestException.class)
+    public @ResponseBody RestErrorInfo handleBadRequestException(BadRequestException ex, WebRequest request,
+            HttpServletResponse response) {
+        log.info("BadRequestException handler:" + ex.getMessage());
 
-	// todo: replace with exception mapping
-	public static <T> T checkResourceFound(final T resource) {
-		if (resource == null) {
-			throw new ResourceNotFoundException("resource not found");
-		}
-		return resource;
-	}
+        return new RestErrorInfo(ex, "Sorry couldn't handle it.");
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.eventPublisher = applicationEventPublisher;
+    }
+
+    // todo: replace with exception mapping
+    public static <T> T checkResourceFound(final T resource) {
+        if (resource == null) {
+            throw new ResourceNotFoundException("resource not found");
+        }
+        return resource;
+    }
 
 }
