@@ -6,6 +6,9 @@ spring.jmx:
    enabled: false
 
 spring:
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
   hateoas:
     use-hal-as-default-json-media-type: false
   jpa:

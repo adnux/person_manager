@@ -16,7 +16,7 @@ package com.andre.example.domain;
 // @Id
 // private String id;
 //
-// @DBRef
+// @DBRef(lazy = true)
 // private Person person;
 //
 // private byte[] img;

@@ -1,7 +1,11 @@
 package com.andre.example.dao.jpa;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 import java.time.LocalDate;
 
@@ -23,37 +27,39 @@ import com.andre.example.domain.Person;
 @ActiveProfiles("test")
 public class PersonRepositoryTest {
 
-    @Autowired
-    private PersonRepository repository;
+	@Autowired
+	private PersonRepository repository;
 
-    @Test
-    public void findByDocumentTest() {
-        Person person = repository.findByDocument("05169407912");
-        assertThat(person, is(notNullValue()));
-        assertThat(person.getDocument(), is("05169407912"));
-    }
+	@Test
+	public void findByDocumentTest() {
+		Person person = repository.findByDocument("05169407912");
+		assertThat(person, is(notNullValue()));
+		assertThat(person.getDocument(), is("05169407912"));
+		assertThat(person.getBirth(), is(LocalDate.of(1986, 8, 6)));
+	}
 
-    @Test
-    public void findByIdAndDocumentNotTest() {
-        Person person = repository.findByIdNotAndDocument("", "05169407912");
-        assertThat(person, is(notNullValue()));
-        assertThat(person.getDocument(), is("05169407912"));
-    }
+	@Test
+	public void findByIdAndDocumentNotTest() {
+		Person person = repository.findByIdNotAndDocument("", "05169407912");
+		assertThat(person, is(notNullValue()));
+		assertThat(person.getDocument(), is("05169407912"));
+		assertThat(person.getBirth(), is(LocalDate.of(1986, 8, 6)));
+	}
 
-    @Test
-    public void dontFindByIdAndDocumentNotTest() {
-        Person person = repository.findByIdNotAndDocument("59d5c2c39756ed75253c495b", "05169407912");
-        assertThat(person, is(nullValue()));
-    }
+	@Test
+	public void dontFindByIdAndDocumentNotTest() {
+		Person person = repository.findByIdNotAndDocument("59d5c2c39756ed75253c495b", "05169407912");
+		assertThat(person, is(nullValue()));
+	}
 
-    @Test
-    public void findByNameOrDocumentOrEmailOrBirth() {
-        Person filter = new Person(
-                null, "André Luís Ferreira", "05169407912", "adnux182@gmail.com", LocalDate.of(1986, 8, 6));
-        Pageable pageable = new PageRequest(0, 10);
-        Page<Person> page = repository.findByNameOrDocumentOrEmailOrBirth(filter, pageable);
-        assertThat(page, is(notNullValue()));
-        assertThat(page.getContent(), is(not(empty())));
-        assertThat(page.getContent().size(), is(1));
-    }
+	@Test
+	public void findByNameOrDocumentOrEmailOrBirth() {
+		Person filter = new Person(null, "André Luís Ferreira", "05169407912", "adnux182@gmail.com",
+				LocalDate.of(1986, 8, 6));
+		Pageable pageable = new PageRequest(0, 10);
+		Page<Person> page = repository.findByNameOrDocumentOrEmailOrBirth(filter, pageable);
+		assertThat(page, is(notNullValue()));
+		assertThat(page.getContent(), is(not(empty())));
+		assertThat(page.getContent().size(), is(1));
+	}
 }
