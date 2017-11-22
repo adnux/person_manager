@@ -44,8 +44,6 @@ public class PersonValidator implements Validator {
 			errors.rejectValue("document", "document.invalid", "CPF Já cadastrado");
 		}
 
-		// ValidationUtils.rejectIfEmptyOrWhitespace(errors, "middleName",
-		// "field.required");
 	}
 
 	private boolean isCPFValid(Person person) {

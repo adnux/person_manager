@@ -134,6 +134,24 @@ public class PeopleControllerTest {
 		repository.delete(id);
 	}
 
+	@Test
+	public void shouldNotAcceptWrongDate() throws Exception {
+		String p1Json = "{name: 'Pessoa Teste', document: '82542284342', email: 'email@email.com', birth: '9876-99-99'}";
+
+		// CREATE
+		MvcResult result = mvc.perform(post("/api/people").accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON).content(p1Json)).andExpect(status().isCreated()).andReturn();
+
+		String id = result.getResponse().getHeader("id");
+
+		// TRY TO DUPLICATE
+		mvc.perform(post("/api/people").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+				.content(p1Json)).andExpect(status().isBadRequest()).andReturn();
+
+		// REAL DELETE
+		repository.delete(id);
+	}
+
 	private String toJson(Object obj) throws Exception {
 		ObjectMapper map = new ObjectMapper();
 		map.registerModule(new JavaTimeModule());
